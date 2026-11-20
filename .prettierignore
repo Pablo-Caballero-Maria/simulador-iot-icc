@@ -1,0 +1,8 @@
+.next
+node_modules
+coverage
+memoria
+package-lock.json
+src/sim/wearable/rhythm-model.json
+src/data/resultados.json
+next-env.d.ts

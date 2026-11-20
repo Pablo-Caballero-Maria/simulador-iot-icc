@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Colores de los enlaces y tipos de mensaje (iguales en la escena 3D). */
+  --color-ble: #0891b2;
+  --color-cell: #d97706;
+  --color-net: #64748b;
+  --color-order: #7c3aed;
+  --color-alert: #e11d48;
+  --color-ok: #059669;
+  --color-hospital: #2563eb;
+
+  /* Acento de la interfaz. */
+  --color-accent: #0e7490;
+  --color-accent-soft: #ecfeff;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* Barras de desplazamiento discretas en los paneles. */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Control deslizante con el color de acento. */
+input[type="range"] {
+  accent-color: var(--color-accent);
+}
+
+/* Secciones plegables: sin el triángulo por defecto. */
+summary {
+  list-style: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-rise-in {
+  animation: rise-in 0.35s ease-out;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.animate-slide-in {
+  animation: slide-in 0.25s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

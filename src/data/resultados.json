@@ -1,0 +1,224 @@
+{
+  "generatedAt": "2026-11-20",
+  "normalWeek": {
+    "blePerDayKB": 17.2,
+    "wanPerDayKB": 53.1,
+    "payloadPerDayKB": 26.2,
+    "autonomyDays": 46.1,
+    "autonomyAgedDays": 36.8,
+    "currentMa": 0.154,
+    "accuracyPct": 99.79,
+    "windowsPerWeek": 75600,
+    "falseAlertsPerWeek": 0,
+    "criticalAlerts": 0,
+    "bleCodedPct": 6.4,
+    "bleDisconnectedPct": 4.2,
+    "duplicatesPerWeek": 3
+  },
+  "stableFalseAlerts": {
+    "days": 180,
+    "alerts": 0,
+    "perPatientYear": 0
+  },
+  "threeStripDay": {
+    "bleKB": 48,
+    "wanKB": 86.2,
+    "payloadKB": 57.4
+  },
+  "vtLteM": {
+    "runs": 10,
+    "localAlarmMs": 50,
+    "toStationS": {
+      "mediana": 0.51,
+      "max": 0.75
+    },
+    "toConsoleS": {
+      "mediana": 2.8,
+      "p95": 4,
+      "max": 4.1
+    },
+    "ackS": {
+      "mediana": 35
+    },
+    "ambulanceArrived": 10
+  },
+  "vtNbIot": {
+    "runs": 10,
+    "localAlarmMs": 50,
+    "toStationS": {
+      "mediana": 0.51,
+      "max": 0.75
+    },
+    "toConsoleS": {
+      "mediana": 12.9,
+      "p95": 16.6,
+      "max": 17.3
+    },
+    "ackS": {
+      "mediana": 35
+    },
+    "ambulanceArrived": 10
+  },
+  "af": {
+    "detectS": {
+      "mediana": 28,
+      "max": 36
+    },
+    "consoleS": {
+      "mediana": 33
+    }
+  },
+  "pause": {
+    "localAlarmFromOnsetS": {
+      "mediana": 4,
+      "max": 4
+    }
+  },
+  "outage": {
+    "localAlarmS": 0.05,
+    "smsS": 36,
+    "consoleAfterH": 2.72,
+    "storedAndForwarded": 8
+  },
+  "decompensation": {
+    "admissionWithoutSystemDay": 8.2,
+    "alertDay": 3,
+    "leadTimeDays": 5.2,
+    "signatureDelayH": 0.8,
+    "firstDoseDay": 3.3,
+    "doses": 2.2,
+    "peakCongestion": 0.36,
+    "admitted": 0
+  },
+  "attack": {
+    "rejected": [
+      "firma no válida",
+      "orden ya ejecutada (repetida)"
+    ],
+    "extraDoses": 1
+  },
+  "raw": {
+    "blePerDayMB": 65.5,
+    "wanPerDayMB": 70.4,
+    "autonomyDays": 14.4,
+    "currentMa": 0.492,
+    "vtToConsoleS": {
+      "mediana": 12.6,
+      "max": 14
+    }
+  },
+  "battery": {
+    "5%": 6.2,
+    "10%": 4.4,
+    "20%": 0.7
+  },
+  "classifier": {
+    "parameters": 261,
+    "weightBytes": 324,
+    "generatedBy": "scripts/train-classifier.ts",
+    "trainWindows": 22500,
+    "testWindows": 7500,
+    "accuracyFloat": 0.9949,
+    "accuracyInt8": 0.9949,
+    "perClass": {
+      "normal": {
+        "sensitivity": 0.9928,
+        "ppv": 0.9922
+      },
+      "af": {
+        "sensitivity": 0.9947,
+        "ppv": 0.9947
+      },
+      "vt": {
+        "sensitivity": 1,
+        "ppv": 1
+      },
+      "ectopy": {
+        "sensitivity": 0.9866,
+        "ppv": 0.988
+      },
+      "noise": {
+        "sensitivity": 1,
+        "ppv": 0.9993
+      }
+    },
+    "confusion": [
+      [
+        1649,
+        2,
+        0,
+        10,
+        0
+      ],
+      [
+        2,
+        1492,
+        0,
+        6,
+        0
+      ],
+      [
+        0,
+        0,
+        1500,
+        0,
+        0
+      ],
+      [
+        11,
+        6,
+        0,
+        1321,
+        1
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        1500
+      ]
+    ],
+    "classes": [
+      "normal",
+      "af",
+      "vt",
+      "ectopy",
+      "noise"
+    ]
+  },
+  "economics": {
+    "pesimista": {
+      "avoided": 40.8,
+      "treatedAtHome": 18.3,
+      "annualSavings": 297019,
+      "netAnnual": -14981,
+      "paybackMonths": null,
+      "roi3Pct": -36.2,
+      "bedDays": 414
+    },
+    "base": {
+      "avoided": 48.9,
+      "treatedAtHome": 28.5,
+      "annualSavings": 383311,
+      "netAnnual": 71311,
+      "paybackMonths": 78,
+      "roi3Pct": -17.7,
+      "bedDays": 542
+    },
+    "optimista": {
+      "avoided": 57.1,
+      "treatedAtHome": 37.1,
+      "annualSavings": 462881,
+      "netAnnual": 150881,
+      "paybackMonths": 37,
+      "roi3Pct": -0.6,
+      "bedDays": 659
+    },
+    "capex": 461500,
+    "opex": 312000,
+    "costPerPatientMonth": 77.6,
+    "breakEvenReductionPct": 41.5,
+    "breakEvenRisk": 0.4
+  }
+}
