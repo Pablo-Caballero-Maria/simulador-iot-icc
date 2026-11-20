@@ -64,7 +64,7 @@ page.on("console", (m) => {
 });
 
 try {
-  await page.goto(BASE, { waitUntil: "networkidle" });
+  await page.goto(BASE, { waitUntil: "load", timeout: 60_000 });
   await page.getByRole("button", { name: "Cerrar el recorrido" }).click();
   await page.getByRole("button", { name: /Escenario/ }).click();
   await page.getByRole("option", { name: /Taquicardia ventricular/ }).click();
@@ -91,9 +91,9 @@ try {
     .waitFor({ timeout: 15_000 });
   console.log("✓ estadísticas y registro de mensajes");
 
-  await page.goto(`${BASE}/como-funciona`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/como-funciona`, { waitUntil: "load", timeout: 60_000 });
   await page.getByRole("heading", { name: "Resultados frente a los requisitos" }).waitFor();
-  await page.goto(`${BASE}/economia`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/economia`, { waitUntil: "load", timeout: 60_000 });
   await page.getByRole("heading", { name: "Estudio económico" }).waitFor();
   console.log("✓ páginas «Cómo funciona» y «Estudio económico»");
 
