@@ -1,5 +1,7 @@
 # Simulador IoT · Insuficiencia cardíaca
 
+**Web:** https://simulador-iot-icc.vercel.app · **Memoria:** [`memoria/memoria.pdf`](memoria/memoria.pdf)
+
 Simulación 3D e interactiva de un sistema IoT Edge–Fog–Cloud para monitorizar en casa a pacientes dados de alta tras un
 ingreso por insuficiencia cardíaca. Acompaña a la memoria del trabajo final de la asignatura _Internet of Things_ (Máster
 Universitario en Inteligencia Computacional e IoT, Universidad de Córdoba), que está en [`memoria/`](memoria/).
