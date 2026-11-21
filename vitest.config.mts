@@ -16,7 +16,7 @@ export default defineConfig({
       provider: "v8",
       include: ["src/sim/**/*.ts", "src/lib/**/*.ts"],
       exclude: ["**/*.test.ts"],
-      reporter: ["text-summary", "html"],
+      reporter: ["text-summary", "json-summary", "lcov", "html"],
     },
   },
 });

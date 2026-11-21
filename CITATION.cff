@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "Si usas este software, cítalo con estos metadatos."
+type: software
+title: "Simulador IoT para la monitorización de pacientes con insuficiencia cardíaca"
+abstract: "Simulación 3D e interactiva de un sistema IoT Edge–Fog–Cloud para monitorizar en casa a pacientes con insuficiencia cardíaca: ECG a 256 Hz, detector de QRS de Pan–Tompkins, red neuronal INT8 de 261 parámetros que clasifica el ritmo en el wearable, índice de congestión, BLE, LTE-M/NB-IoT, MQTT 5, SenML-CBOR, HL7 FHIR y órdenes de diurético firmadas."
+authors:
+  - family-names: "Caballero María"
+    given-names: "Pablo"
+version: 1.0.0
+date-released: 2026-11-21
+license: MIT
+repository-code: "https://github.com/Pablo-Caballero-Maria/simulador-iot-icc"
+url: "https://simulador-iot-icc.vercel.app"
+keywords:
+  - "IoT"
+  - "TinyML"
+  - "ECG"
+  - "insuficiencia cardíaca"
+  - "red neuronal"
+  - "cuantización INT8"
+  - "edge computing"
+  - "simulación de eventos discretos"
+  - "MQTT"
+  - "HL7 FHIR"
+  - "three.js"

@@ -1,0 +1,26 @@
+name: "Una cifra no coincide con la memoria"
+description: "Un resultado del simulador distinto del que da la memoria, o un modelo que no se comporta como se describe."
+title: "[Modelo] "
+labels: ["question"]
+body:
+  - type: input
+    id: escenario
+    attributes:
+      label: "Escenario, velocidad y semilla"
+      placeholder: "p. ej. taquicardia ventricular, 5×"
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: "Qué dice la memoria (apartado y tabla)"
+      placeholder: "Tabla 24: alerta crítica a la consola p95 ≤ 30 s…"
+    validations:
+      required: true
+  - type: textarea
+    id: obtenido
+    attributes:
+      label: "Qué muestra el simulador"
+      placeholder: ""
+    validations:
+      required: true
