@@ -12,6 +12,7 @@ repositorio.
 - `"type": "module"` en `package.json`: los `.ts`/`.js` de la raíz se cargan como módulos ES, como en
   las otras webs. Los scripts (`dev`, `build`, `check`, `results`, `train:classifier`, `test:e2e`) y las
   configuraciones siguen funcionando igual.
+- La web ya no envía la cabecera `X-Powered-By: Next.js` (`poweredByHeader: false`).
 
 ## [1.1.0] - 2026-11-21
 
