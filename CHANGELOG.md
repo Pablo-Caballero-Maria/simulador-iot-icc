@@ -7,6 +7,12 @@ repositorio.
 
 ## [Sin publicar]
 
+### Cambiado
+
+- `"type": "module"` en `package.json`: los `.ts`/`.js` de la raíz se cargan como módulos ES, como en
+  las otras webs. Los scripts (`dev`, `build`, `check`, `results`, `train:classifier`, `test:e2e`) y las
+  configuraciones siguen funcionando igual.
+
 ## [1.1.0] - 2026-11-21
 
 ### Añadido
