@@ -13,6 +13,7 @@ repositorio.
   las otras webs. Los scripts (`dev`, `build`, `check`, `results`, `train:classifier`, `test:e2e`) y las
   configuraciones siguen funcionando igual.
 - La web ya no envía la cabecera `X-Powered-By: Next.js` (`poweredByHeader: false`).
+- `lucide-react` 1.75.0 (antes 1.66.0), la misma versión que en las otras webs.
 
 ## [1.1.0] - 2026-11-21
 
