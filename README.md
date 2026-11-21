@@ -22,6 +22,7 @@ insuficiencia cardíaca.
 ![three.js](https://img.shields.io/badge/three.js-React_Three_Fiber-000000?logo=threedotjs)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-95_tests-6E9F18?logo=vitest&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-11_tests_e2e-2EAD33?logo=playwright&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-desplegada-000000?logo=vercel)
 
 [**Abrir el simulador**](https://simulador-iot-icc.vercel.app) · [Memoria (PDF)](memoria/memoria.pdf) ·
@@ -217,16 +218,16 @@ El resto de la información se abre bajo demanda, de una en una, desde la barra 
 
 ## Scripts
 
-| Script                     | Para qué                                                                            |
-| -------------------------- | ----------------------------------------------------------------------------------- |
-| `npm run dev`              | Servidor de desarrollo                                                              |
-| `npm run build` / `start`  | Compilación y servidor de producción                                                |
-| `npm test`                 | Tests unitarios y de integración (Vitest)                                           |
-| `npm run test:coverage`    | Tests con cobertura                                                                 |
-| `npm run test:e2e`         | Prueba de humo en Chrome sin interfaz (requiere `npm run build` y Chrome instalado) |
-| `npm run check`            | Lint, tipos, formato y tests                                                        |
-| `npm run train:classifier` | Vuelve a entrenar y cuantizar la red del wearable                                   |
-| `npm run results`          | Ejecuta todos los escenarios con varias semillas y guarda las cifras de la memoria  |
+| Script                     | Para qué                                                                           |
+| -------------------------- | ---------------------------------------------------------------------------------- |
+| `npm run dev`              | Servidor de desarrollo                                                             |
+| `npm run build` / `start`  | Compilación y servidor de producción                                               |
+| `npm test`                 | Tests unitarios y de integración (Vitest)                                          |
+| `npm run test:coverage`    | Tests con cobertura                                                                |
+| `npm run test:e2e`         | Tests de extremo a extremo con Playwright (antes, `npm run build`)                 |
+| `npm run check`            | Lint, tipos, formato y tests                                                       |
+| `npm run train:classifier` | Vuelve a entrenar y cuantizar la red del wearable                                  |
+| `npm run results`          | Ejecuta todos los escenarios con varias semillas y guarda las cifras de la memoria |
 
 ## Estructura
 
@@ -246,7 +247,8 @@ src/
   components/     Interfaz: escena 3D (React Three Fiber), paneles y páginas
   lib/            Estado (zustand) y bucle de simulación en el navegador
   app/            Rutas de Next.js: /, /como-funciona, /economia; icono de la web
-scripts/          Entrenamiento del clasificador, resultados y prueba de humo
+scripts/          Entrenamiento del clasificador y resultados de la memoria
+e2e/              Tests de extremo a extremo (Playwright)
 docs/             Arquitectura del motor (ARQUITECTURA.md) y figuras del README (img/)
 memoria/          Memoria del trabajo (PDF) y sus figuras
 ```
@@ -261,16 +263,16 @@ Cada _push_ y _pull request_ pasa por [GitHub Actions](https://github.com/Pablo-
 flowchart LR
     P(["push / PR"]) --> Q["Lint, tipos y formato<br/>ESLint · tsc · Prettier"]
     P --> T["Tests y cobertura<br/>Vitest + v8"]
-    P --> B["Build y prueba de humo<br/>next build · Chrome sin interfaz"]
+    P --> B["Build y extremo a extremo<br/>next build · Playwright"]
     P --> C["CodeQL<br/>JS/TS y workflows"]
     Q & T & B --> I["Insignia de cobertura<br/>(solo en main)"]
 ```
 
-| Prueba                     | Qué comprueba                                                                                                                                                                                                                               |
-| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/sim/**/*.test.ts`     | vectores de la RFC 8949, tamaños MQTT y TLS, detector de QRS (sensibilidad y VPP ≥ 99 %), exactitud de la red, formatos binarios, reglas, energía, dispensador y firma, índice de congestión, enlaces e integración de todos los escenarios |
-| `src/components/__tests__` | componentes con Testing Library, incluida la consola conectada al motor y el panel lateral                                                                                                                                                  |
-| `scripts/smoke.mjs`        | abre la web en Chrome sin interfaz y recorre el escenario de taquicardia ventricular                                                                                                                                                        |
+| Prueba                        | Qué comprueba                                                                                                                                                                                                                               |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/sim/**/*.test.ts`        | vectores de la RFC 8949, tamaños MQTT y TLS, detector de QRS (sensibilidad y VPP ≥ 99 %), exactitud de la red, formatos binarios, reglas, energía, dispensador y firma, índice de congestión, enlaces e integración de todos los escenarios |
+| `src/components/__tests__`    | componentes con Testing Library, incluida la consola conectada al motor y el panel lateral                                                                                                                                                  |
+| `e2e/` (Playwright, 11 tests) | recorrido guiado, escena 3D, icono, barra superior, escenarios de taquicardia ventricular, fibrilación auricular y órdenes falsas, paneles y páginas «Cómo funciona» y «Economía», sin errores en la consola                                |
 
 Además: Dependabot (npm y GitHub Actions) y escaneo de secretos con protección al hacer _push_.
 
@@ -309,7 +311,7 @@ Usa los metadatos de [CITATION.cff](CITATION.cff) (_Cite this repository_ en Git
   author  = {Caballero María, Pablo},
   title   = {Simulador IoT para la monitorización de pacientes con insuficiencia cardíaca},
   year    = {2026},
-  version = {1.0.0},
+  version = {1.1.0},
   url     = {https://github.com/Pablo-Caballero-Maria/simulador-iot-icc},
   license = {MIT}
 }
@@ -320,7 +322,8 @@ Usa los metadatos de [CITATION.cff](CITATION.cff) (_Cite this repository_ en Git
 ## Tecnologías y licencia
 
 Next.js 16 (App Router), React 19, TypeScript estricto, Tailwind CSS 4, three.js con React Three Fiber y drei, zustand,
-@noble/curves (ECDSA), Vitest y Testing Library, Playwright (prueba de humo), ESLint y Prettier. Despliegue en Vercel.
+@noble/curves (ECDSA), Vitest y Testing Library, Playwright, ESLint y Prettier. Despliegue en Vercel, con Web Analytics
+(visitas, sin cookies) y Speed Insights (Core Web Vitals de visitas reales) solo en el build que hace Vercel.
 El icono de la web es el icono _heart-pulse_ de [Lucide](https://lucide.dev) (licencia ISC).
 
 [MIT](LICENSE). Los datos fisiológicos son sintéticos; el simulador no es un producto sanitario.

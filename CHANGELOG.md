@@ -7,6 +7,23 @@ repositorio.
 
 ## [Sin publicar]
 
+## [1.1.0] - 2026-11-21
+
+### Añadido
+
+- **Tests de extremo a extremo con Playwright** (`e2e/`, `npm run test:e2e`), 11 tests contra el build de
+  producción con WebGL por software: el recorrido guiado, que la escena 3D se dibuje, el icono, la barra
+  superior con los diez escenarios, la taquicardia ventricular (la red la detecta y la alerta llega a la
+  consola), la fibrilación auricular (la red la clasifica y se avisa a enfermería), las órdenes falsas
+  (rechazadas por firma y por repetidas), los paneles y las páginas «Cómo funciona» y «Economía». Cualquier
+  error en la consola del navegador hace fallar el test.
+- **Vercel Web Analytics** (visitas, sin cookies) y **Speed Insights** (Core Web Vitals de visitas reales),
+  solo en el build que hace Vercel.
+
+### Eliminado
+
+- `scripts/smoke.mjs` y la dependencia `playwright-core`: la suite de Playwright los sustituye.
+
 ## [1.0.0] - 2026-11-21
 
 ### Añadido
@@ -46,6 +63,7 @@ repositorio.
 - 95 tests con Vitest, prueba de humo en Chrome y CI con GitHub Actions.
 - La memoria del trabajo final (`memoria/memoria.pdf`) y el enlace a la web desplegada.
 
-[Sin publicar]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.0.0...HEAD
+[Sin publicar]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/releases/tag/v0.1.0

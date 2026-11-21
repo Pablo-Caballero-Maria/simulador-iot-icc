@@ -99,4 +99,6 @@ La interfaz es deliberadamente mínima (tema claro): sobre la escena solo hay el
   índice de congestión, enlaces e integración de todos los escenarios.
 - `src/components/__tests__`: componentes con Testing Library, incluida la consola conectada al motor y el panel
   lateral (uno a la vez).
-- `scripts/smoke.mjs`: abre la web en Chrome sin interfaz y recorre el escenario de taquicardia ventricular.
+- `e2e/` (Playwright): abre la web en Chromium sin interfaz y recorre el recorrido guiado, la escena 3D, los escenarios
+  de taquicardia ventricular, fibrilación auricular y órdenes falsas, los paneles y las páginas «Cómo funciona» y
+  «Economía», fallando ante cualquier error en la consola.

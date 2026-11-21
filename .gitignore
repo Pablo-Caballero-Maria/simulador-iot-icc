@@ -42,3 +42,4 @@ next-env.d.ts
 
 # capturas y artefactos locales
 /test-results
+/playwright-report

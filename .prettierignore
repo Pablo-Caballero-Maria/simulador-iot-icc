@@ -6,3 +6,5 @@ package-lock.json
 src/sim/wearable/rhythm-model.json
 src/data/resultados.json
 next-env.d.ts
+test-results
+playwright-report
