@@ -7,6 +7,7 @@ import { SPEEDS, SPEED_LABELS, useSimStore } from "@/lib/sim-store";
 import { formatNumber } from "@/lib/format";
 import { REPO_URL } from "@/data/links";
 import { ScenarioPicker } from "@/components/simulator/ScenarioPicker";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export function TopBar() {
   const clock = useSimStore((s) => s.snapshot?.clock ?? "—");
@@ -95,6 +96,7 @@ export function TopBar() {
           <Code aria-hidden className="h-3.5 w-3.5" />
           <span className="hidden lg:inline">Código</span>
         </a>
+        <ThemeToggle />
       </nav>
     </header>
   );

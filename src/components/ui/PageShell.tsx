@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { HeartPulse } from "lucide-react";
 import { MEMORIA_URL, REPO_URL } from "@/data/links";
+import { ThemeToggle } from "./ThemeToggle";
 
 const NAV_LINK = "rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-100 hover:text-slate-900";
 
@@ -34,6 +35,7 @@ export function PageShell({ title, intro, children }: { title: string; intro: Re
               Memoria (PDF)
             </a>
           </nav>
+          <ThemeToggle />
         </div>
       </header>
       <main className="mx-auto max-w-6xl space-y-6 px-4 py-8">

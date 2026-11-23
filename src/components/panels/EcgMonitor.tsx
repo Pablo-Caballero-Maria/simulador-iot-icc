@@ -12,6 +12,8 @@ import { CLASS_LABELS } from "@/sim/wearable/classes";
 import { ECG_FS } from "@/sim/physiology/ecg";
 import { formatNumber } from "@/lib/format";
 import { cx } from "@/components/ui/primitives";
+import { CANVAS_COLORS } from "@/lib/theme";
+import { useTheme } from "@/lib/use-theme";
 
 const SECONDS = 6;
 const CLASS_COLORS = ["#059669", "#d97706", "#e11d48", "#7c3aed", "#94a3b8"];
@@ -82,6 +84,7 @@ export function EcgMonitor() {
 
 function EcgCanvas({ vibrating }: { vibrating: boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const theme = useTheme();
   useEffect(() => {
     let raf = 0;
     const draw = () => {
@@ -101,10 +104,11 @@ function EcgCanvas({ vibrating }: { vibrating: boolean }) {
       const g = c.getContext("2d");
       if (!g) return;
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      g.fillStyle = "#fffafa";
+      const colors = CANVAS_COLORS[theme];
+      g.fillStyle = colors.paper;
       g.fillRect(0, 0, w, h);
       // Papel de ECG: cuadrícula cada 0,2 s y 0,5 mV.
-      g.strokeStyle = "#fbd5d5";
+      g.strokeStyle = colors.grid;
       g.lineWidth = 1;
       for (let x = 0; x < w; x += w / (SECONDS * 5)) {
         g.beginPath();
@@ -126,7 +130,7 @@ function EcgCanvas({ vibrating }: { vibrating: boolean }) {
         const n = SECONDS * ECG_FS;
         const data = display.samples.subarray(display.samples.length - n);
         const t0 = display.end - SECONDS;
-        g.strokeStyle = vibrating ? "#e11d48" : "#0f172a";
+        g.strokeStyle = vibrating ? "#e11d48" : colors.ink;
         g.lineWidth = 1.3;
         g.beginPath();
         for (let i = 0; i < n; i++) {
@@ -150,21 +154,21 @@ function EcgCanvas({ vibrating }: { vibrating: boolean }) {
       } else {
         // Tacograma: un punto por intervalo RR.
         const pts = detections.slice(-60);
-        g.fillStyle = "#0f172a";
+        g.fillStyle = colors.ink;
         for (let i = 1; i < pts.length; i++) {
           const rr = pts[i].t - pts[i - 1].t;
           const x = (i / 60) * w;
           const y = h - Math.min(rr / 2, 1) * (h - 10) - 5;
           g.fillRect(x - 1.5, y - 1.5, 3, 3);
         }
-        g.fillStyle = "#64748b";
+        g.fillStyle = colors.muted;
         g.font = "10px sans-serif";
         g.fillText("Intervalo RR de cada latido (0–2 s)", 6, 12);
       }
     };
     raf = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(raf);
-  }, [vibrating]);
+  }, [vibrating, theme]);
   return (
     <canvas
       ref={canvas}

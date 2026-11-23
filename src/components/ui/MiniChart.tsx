@@ -60,7 +60,7 @@ export function MiniChart({
         role="img"
         aria-label={series.map((s) => s.label).join(", ")}
       >
-        <line x1={pad.l} x2={width - pad.r} y1={height - pad.b} y2={height - pad.b} stroke="#cbd5e1" />
+        <line x1={pad.l} x2={width - pad.r} y1={height - pad.b} y2={height - pad.b} className="stroke-slate-300" />
         {threshold ? (
           <g>
             <line

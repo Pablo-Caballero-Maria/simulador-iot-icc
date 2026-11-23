@@ -9,6 +9,8 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Color, Vector3, type DirectionalLight, type HemisphereLight } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import { useSimStore } from "@/lib/sim-store";
+import { SCENE_COLORS } from "@/lib/theme";
+import { useTheme } from "@/lib/use-theme";
 import { Dispenser, Scale, Station } from "./Devices";
 import { House } from "./House";
 import { Ambulance, CellTower, CloudPlatform, Ground, Hospital } from "./Infrastructure";
@@ -18,6 +20,7 @@ import { CAMERA_PRESETS } from "./positions";
 
 export default function SimulationScene() {
   const select = useSimStore((s) => s.selectNode);
+  const { sky } = SCENE_COLORS[useTheme()];
   return (
     <Canvas
       shadows
@@ -26,8 +29,8 @@ export default function SimulationScene() {
       onPointerMissed={() => select(null)}
       aria-label="Escena 3D del sistema: domicilio, red móvil, nube y hospital"
     >
-      <color attach="background" args={["#eef3f8"]} />
-      <fog attach="fog" args={["#eef3f8", 90, 220]} />
+      <color attach="background" args={[sky]} />
+      <fog attach="fog" args={[sky, 90, 220]} />
       <DayNightLights />
       <Ground />
       <House />
