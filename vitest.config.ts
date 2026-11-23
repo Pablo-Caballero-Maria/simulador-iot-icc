@@ -14,8 +14,9 @@ export default defineConfig({
     testTimeout: 60_000,
     coverage: {
       provider: "v8",
-      include: ["src/sim/**/*.ts", "src/lib/**/*.ts"],
-      exclude: ["**/*.test.ts"],
+      include: ["src/sim/**/*.ts", "src/lib/**/*.ts", "src/sw/**/*.ts"],
+      // La entrada del service worker solo corre en un navegador: la prueba e2e/offline.spec.ts.
+      exclude: ["**/*.test.ts", "src/sw/worker.ts"],
       reporter: ["text-summary", "json-summary", "lcov", "html"],
     },
   },

@@ -11,13 +11,12 @@ import { TopBar } from "@/components/panels/TopBar";
 import { EcgMonitor } from "@/components/panels/EcgMonitor";
 import { Caption, NodeCard, StatusChips, ViewMenu } from "./SceneOverlay";
 import { ToolPanel, ToolRail } from "./ToolPanel";
+import { SceneSkeleton } from "./SceneSkeleton";
 import { Tour } from "./Tour";
 
 const SimulationScene = dynamic(() => import("@/components/scene/SimulationScene"), {
   ssr: false,
-  loading: () => (
-    <div className="flex h-full items-center justify-center text-sm text-slate-400">Cargando escena 3D…</div>
-  ),
+  loading: () => <SceneSkeleton />,
 });
 
 const TOUR_SEEN_KEY = "simulador-icc:recorrido-visto";

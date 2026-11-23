@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ServiceWorker } from "@/components/ui/ServiceWorker";
 import { VercelTelemetry } from "@/components/ui/VercelTelemetry";
+import { THEME_COLORS, THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -16,14 +18,24 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f8fafc",
+  // El del tema claro; ThemeToggle lo cambia con el tema (src/lib/theme.ts).
+  themeColor: THEME_COLORS.light,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    // El script del tema pone data-theme antes de que React hidrate: de ahí suppressHydrationWarning.
+    <html
+      lang="es"
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
+      <head>
+        {/* Un <script> normal, no next/script: tiene que ejecutarse antes de pintar. */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="flex min-h-full flex-col bg-slate-50 font-sans text-slate-900">
-        {children}
+        <ServiceWorker>{children}</ServiceWorker>
         <VercelTelemetry />
       </body>
     </html>

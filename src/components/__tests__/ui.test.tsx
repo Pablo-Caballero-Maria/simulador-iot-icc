@@ -111,3 +111,25 @@ describe("Interfaz minimalista", () => {
     expect(useSimStore.getState().panel).toBe("explicacion");
   });
 });
+
+describe("ThemeToggle", () => {
+  it("empieza en claro, cambia al oscuro y lo recuerda", async () => {
+    const { ThemeToggle } = await import("@/components/ui/ThemeToggle");
+    const { THEME_STORAGE_KEY } = await import("@/lib/theme");
+    render(<ThemeToggle />);
+    fireEvent.click(screen.getByRole("button", { name: "Cambiar al tema oscuro" }));
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
+    expect(await screen.findByRole("button", { name: "Cambiar al tema claro" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Cambiar al tema claro" }));
+    expect(document.documentElement.dataset.theme).toBe("light");
+  });
+});
+
+describe("SceneSkeleton", () => {
+  it("anuncia que la escena 3D se está cargando", async () => {
+    const { SceneSkeleton } = await import("@/components/simulator/SceneSkeleton");
+    render(<SceneSkeleton />);
+    expect(screen.getByRole("status", { name: "Cargando escena 3D" })).toBeInTheDocument();
+  });
+});
