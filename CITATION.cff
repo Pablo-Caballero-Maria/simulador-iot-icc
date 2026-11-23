@@ -6,8 +6,8 @@ abstract: "Simulación 3D e interactiva de un sistema IoT Edge–Fog–Cloud par
 authors:
   - family-names: "Caballero María"
     given-names: "Pablo"
-version: 1.1.0
-date-released: 2026-11-21
+version: 1.2.0
+date-released: 2026-11-22
 license: MIT
 repository-code: "https://github.com/Pablo-Caballero-Maria/simulador-iot-icc"
 url: "https://simulador-iot-icc.vercel.app"

@@ -21,8 +21,9 @@ insuficiencia cardíaca.
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![three.js](https://img.shields.io/badge/three.js-React_Three_Fiber-000000?logo=threedotjs)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
-![Vitest](https://img.shields.io/badge/Vitest-95_tests-6E9F18?logo=vitest&logoColor=white)
-![Playwright](https://img.shields.io/badge/Playwright-11_tests_e2e-2EAD33?logo=playwright&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-104_tests-6E9F18?logo=vitest&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-13_tests_e2e-2EAD33?logo=playwright&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-funciona_sin_conexi%C3%B3n-5A0FC8?logo=pwa&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-desplegada-000000?logo=vercel)
 
 [**Abrir el simulador**](https://simulador-iot-icc.vercel.app) · [Memoria (PDF)](memoria/memoria.pdf) ·
@@ -200,6 +201,11 @@ pausa o reinicia; cada escenario explica qué observar:
 | Escenario base: todo a la nube | 70 MB al día, menos batería y un aviso que depende de la red                        |
 | Batería baja                   | avisos al 20 % y al 10 % y modo de solo alarmas al 5 %                              |
 
+Tras la primera visita el simulador **funciona sin conexión**: un _service worker_ (Serwist) guarda la web entera
+(three.js y la red neuronal incluidas) y las tres páginas, y la simulación corre toda en el navegador. Tiene tema
+claro (el de siempre) y oscuro, con el botón de la barra superior, y mientras se descarga la escena 3D se ve su
+esqueleto.
+
 El resto de la información se abre bajo demanda, de una en una, desde la barra lateral:
 
 | Panel       | Qué muestra                                                                      |
@@ -245,8 +251,10 @@ src/
     scenarios.ts  Escenarios guiados
     economics.ts  Modelo económico (apartado 6.15)
   components/     Interfaz: escena 3D (React Three Fiber), paneles y páginas
-  lib/            Estado (zustand) y bucle de simulación en el navegador
-  app/            Rutas de Next.js: /, /como-funciona, /economia; icono de la web
+  lib/            Estado (zustand), bucle de simulación en el navegador y tema claro/oscuro
+  sw/             El service worker (worker.ts): qué guarda y cómo
+  app/            Rutas de Next.js: /, /como-funciona, /economia, /~offline; el service worker
+                  (/serwist/sw.js) y el icono de la web
 scripts/          Entrenamiento del clasificador y resultados de la memoria
 e2e/              Tests de extremo a extremo (Playwright)
 docs/             Arquitectura del motor (ARQUITECTURA.md) y figuras del README (img/)
@@ -271,8 +279,9 @@ flowchart LR
 | Prueba                        | Qué comprueba                                                                                                                                                                                                                               |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/sim/**/*.test.ts`        | vectores de la RFC 8949, tamaños MQTT y TLS, detector de QRS (sensibilidad y VPP ≥ 99 %), exactitud de la red, formatos binarios, reglas, energía, dispensador y firma, índice de congestión, enlaces e integración de todos los escenarios |
-| `src/components/__tests__`    | componentes con Testing Library, incluida la consola conectada al motor y el panel lateral                                                                                                                                                  |
-| `e2e/` (Playwright, 11 tests) | recorrido guiado, escena 3D, icono, barra superior, escenarios de taquicardia ventricular, fibrilación auricular y órdenes falsas, paneles y páginas «Cómo funciona» y «Economía», sin errores en la consola                                |
+| `src/components/__tests__`    | componentes con Testing Library, incluida la consola conectada al motor, el panel lateral, el botón del tema y el esqueleto de la escena                                                                                                    |
+| `src/lib`, `src/sw`           | el tema (por defecto claro, guardado, aplicado antes de pintar) y qué peticiones guarda el service worker                                                                                                                                   |
+| `e2e/` (Playwright, 13 tests) | recorrido guiado, escena 3D, icono, barra superior, escenarios de taquicardia ventricular, fibrilación auricular y órdenes falsas, paneles y páginas «Cómo funciona» y «Economía», sin conexión, el tema, sin errores en la consola         |
 
 Además: Dependabot (npm y GitHub Actions) y escaneo de secretos con protección al hacer _push_.
 

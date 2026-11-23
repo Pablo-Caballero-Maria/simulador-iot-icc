@@ -7,6 +7,24 @@ repositorio.
 
 ## [Sin publicar]
 
+## [1.2.0] - 2026-11-22
+
+### Añadido
+
+- **Tema oscuro**, con un botón en la barra superior y en las páginas de texto; el claro sigue siendo el de
+  siempre y el predeterminado (no sigue al del sistema). Se recuerda en el navegador y un script en `<head>` lo
+  aplica antes de pintar. El oscuro refleja la paleta de Tailwind que usa la interfaz (slate y los tonos de
+  acento: 50 ↔ 950, 100 ↔ 900…) en `@layer theme`, así que los componentes no necesitan variantes `dark:`; el
+  cielo de la escena 3D y el papel del ECG cambian con él.
+- **Funciona sin conexión**: un _service worker_ (Serwist, `src/sw/`, servido en `/serwist/sw.js`) precachea el
+  build (three.js y la red neuronal incluidas) y descarga las tres páginas al instalarse; las páginas van primero
+  a la red. `experimental.useOffline`: sin conexión, una navegación espera a que vuelva en lugar de fallar.
+  Página `/~offline` para lo que no esté guardado.
+- **Esqueletos de carga**: la silueta de la escena 3D mientras se descarga three.js, y una página de texto
+  mientras se carga al navegar (`loading.tsx`).
+- Tests del tema, del botón, del esqueleto y del service worker (104 de Vitest) y, en Playwright, abrir páginas no
+  visitadas sin conexión y el tema (13 en total).
+
 ### Cambiado
 
 - `"type": "module"` en `package.json`: los `.ts`/`.js` de la raíz se cargan como módulos ES, como en
@@ -71,7 +89,8 @@ repositorio.
 - 95 tests con Vitest, prueba de humo en Chrome y CI con GitHub Actions.
 - La memoria del trabajo final (`memoria/memoria.pdf`) y el enlace a la web desplegada.
 
-[Sin publicar]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.1.0...HEAD
+[Sin publicar]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/releases/tag/v0.1.0
