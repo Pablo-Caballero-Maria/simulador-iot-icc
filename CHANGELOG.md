@@ -7,6 +7,35 @@ repositorio.
 
 ## [Sin publicar]
 
+## [1.3.0] - 2026-11-26
+
+### Añadido
+
+- **Una escena 3D más rica y detallada**: un barrio alrededor de la casa (aceras, línea discontinua y paso de
+  cebra, farolas que se encienden al anochecer según la hora simulada, árboles, pinos y arbustos, casas vecinas,
+  coches aparcados y un parque con bancos y flores en la zona del paseo); en la casa, ventanas y muebles en cada
+  estancia y un jardín con valla, cancela, camino, árboles, parterres, banco y buzón; el hospital con entrada de
+  urgencias, ventanas en las cuatro fachadas, helipuerto y aparcamiento, y la torre con su caseta y su valla. Los
+  elementos que se repiten se dibujan con instancias.
+- **«Compruébalo en tu navegador»** en «Cómo funciona»: repite la semana normal con semillas nuevas en un Web
+  Worker (TanStack Query guarda cada resultado) y la compara con la media publicada. `npm run results` usa la
+  misma función (`src/sim/experiments.ts`).
+- **Calculadora económica con valores exactos**: cada supuesto tiene su campo además del deslizador; es un
+  formulario de React Hook Form validado con Zod, y un valor fuera de rango se explica sin cambiar los resultados.
+- **Cabeceras de seguridad** en todas las respuestas: Content Security Policy, HSTS, `nosniff`, sin incrustar,
+  `Referrer-Policy`, `Cross-Origin-Opener-Policy` y `Permissions-Policy`. Los tests de extremo a extremo fallan
+  ante cualquier violación del CSP.
+- **Firewall de Vercel**: una regla que registra las sondas de escáneres y _Bot Protection_ y _AI Bots_ en modo
+  registro.
+- Pocas animaciones y sutiles con **Motion**: los pasos del recorrido, el cambio de herramienta y las filas
+  nuevas de la semana simulada.
+
+### Cambiado
+
+- El texto 3D usa una fuente servida por la propia web (Noto Sans, OFL) en lugar de descargarla de jsDelivr: el
+  CSP no necesita abrir otro dominio y funciona sin conexión.
+- El portfolio está ahora en pablo-caballero.vercel.app.
+
 ## [1.2.0] - 2026-11-22
 
 ### Añadido
@@ -89,7 +118,8 @@ repositorio.
 - 95 tests con Vitest, prueba de humo en Chrome y CI con GitHub Actions.
 - La memoria del trabajo final (`memoria/memoria.pdf`) y el enlace a la web desplegada.
 
-[Sin publicar]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.2.0...HEAD
+[Sin publicar]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/compare/v0.1.0...v1.0.0

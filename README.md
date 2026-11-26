@@ -21,15 +21,15 @@ insuficiencia cardíaca.
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
 ![three.js](https://img.shields.io/badge/three.js-React_Three_Fiber-000000?logo=threedotjs)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
-![Vitest](https://img.shields.io/badge/Vitest-104_tests-6E9F18?logo=vitest&logoColor=white)
-![Playwright](https://img.shields.io/badge/Playwright-13_tests_e2e-2EAD33?logo=playwright&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-129_tests-6E9F18?logo=vitest&logoColor=white)
+![Playwright](https://img.shields.io/badge/Playwright-18_tests_e2e-2EAD33?logo=playwright&logoColor=white)
 ![PWA](https://img.shields.io/badge/PWA-funciona_sin_conexi%C3%B3n-5A0FC8?logo=pwa&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-desplegada-000000?logo=vercel)
 
 [**Abrir el simulador**](https://simulador-iot-icc.vercel.app) · [Memoria (PDF)](memoria/memoria.pdf) ·
 [Wiki](https://github.com/Pablo-Caballero-Maria/simulador-iot-icc/wiki) · [Arquitectura](docs/ARQUITECTURA.md) ·
 [Registro de cambios](CHANGELOG.md) ·
-[Resumen en mi portfolio](https://pablo-portfolio-woad.vercel.app/projects/heart-failure-ai)
+[Resumen en mi portfolio](https://pablo-caballero.vercel.app/projects/heart-failure-ai)
 
 <img src="docs/img/simulador-consola.webp" alt="El simulador durante una taquicardia ventricular: la casa del paciente, la red móvil, la nube y el hospital en 3D, la consola clínica con la alerta y el ECG del wearable con el veredicto de la red neuronal" width="860">
 
@@ -184,7 +184,11 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
-La escena 3D ocupa toda la pantalla y solo muestra lo imprescindible: el estado resumido (ritmo, BLE, red móvil y
+La escena 3D ocupa toda la pantalla: la casa amueblada estancia por estancia, con su jardín, en un barrio con
+calles, farolas que se encienden al anochecer según la hora simulada, árboles, casas vecinas, coches y un parque
+para el paseo; la torre de telefonía con su caseta, la nube y el hospital con su entrada de urgencias, helipuerto y
+aparcamiento. Los elementos que se repiten se dibujan con instancias, para que siga siendo ligera. Solo muestra lo
+imprescindible: el estado resumido (ritmo, BLE, red móvil y
 batería), la última explicación y el ECG del wearable. En la barra superior se elige el escenario, la velocidad y se
 pausa o reinicia; cada escenario explica qué observar:
 
@@ -204,7 +208,19 @@ pausa o reinicia; cada escenario explica qué observar:
 Tras la primera visita el simulador **funciona sin conexión**: un _service worker_ (Serwist) guarda la web entera
 (three.js y la red neuronal incluidas) y las tres páginas, y la simulación corre toda en el navegador. Tiene tema
 claro (el de siempre) y oscuro, con el botón de la barra superior, y mientras se descarga la escena 3D se ve su
-esqueleto.
+esqueleto. El texto 3D usa una fuente servida por la propia web (Noto Sans, OFL), no descargada de un CDN.
+
+- **Estudio económico**: cada supuesto se ajusta con su deslizador o se escribe exacto en su campo (un formulario
+  de React Hook Form validado con Zod: un valor fuera de rango se explica y los resultados siguen con el último
+  válido).
+- **«Compruébalo en tu navegador»** («Cómo funciona»): repite la semana normal de la memoria con semillas nuevas,
+  cada una en un Web Worker, y la pone junto a la media publicada (TanStack Query guarda cada resultado).
+- **Seguridad**: todas las respuestas llevan una Content Security Policy (solo la propia web; `blob:` para el
+  worker del texto 3D), HSTS, `nosniff`, sin incrustar, `Referrer-Policy`, `Cross-Origin-Opener-Policy` y
+  `Permissions-Policy` (`src/lib/security-headers.ts`). Zod va sin `eval`, como exige el CSP. En Vercel, el
+  Firewall registra las sondas de escáneres y el tráfico de bots (de momento sin bloquear).
+- Pocas animaciones y sutiles con Motion (pasos del recorrido, cambio de herramienta, filas nuevas), ninguna si el
+  sistema pide reducir el movimiento.
 
 El resto de la información se abre bajo demanda, de una en una, desde la barra lateral:
 
@@ -276,12 +292,12 @@ flowchart LR
     Q & T & B --> I["Insignia de cobertura<br/>(solo en main)"]
 ```
 
-| Prueba                        | Qué comprueba                                                                                                                                                                                                                               |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/sim/**/*.test.ts`        | vectores de la RFC 8949, tamaños MQTT y TLS, detector de QRS (sensibilidad y VPP ≥ 99 %), exactitud de la red, formatos binarios, reglas, energía, dispensador y firma, índice de congestión, enlaces e integración de todos los escenarios |
-| `src/components/__tests__`    | componentes con Testing Library, incluida la consola conectada al motor, el panel lateral, el botón del tema y el esqueleto de la escena                                                                                                    |
-| `src/lib`, `src/sw`           | el tema (por defecto claro, guardado, aplicado antes de pintar) y qué peticiones guarda el service worker                                                                                                                                   |
-| `e2e/` (Playwright, 13 tests) | recorrido guiado, escena 3D, icono, barra superior, escenarios de taquicardia ventricular, fibrilación auricular y órdenes falsas, paneles y páginas «Cómo funciona» y «Economía», sin conexión, el tema, sin errores en la consola         |
+| Prueba                        | Qué comprueba                                                                                                                                                                                                                                                                                                                                                     |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/sim/**/*.test.ts`        | vectores de la RFC 8949, tamaños MQTT y TLS, detector de QRS (sensibilidad y VPP ≥ 99 %), exactitud de la red, formatos binarios, reglas, energía, dispensador y firma, índice de congestión, enlaces e integración de todos los escenarios                                                                                                                       |
+| `src/components/__tests__`    | componentes con Testing Library, incluida la consola conectada al motor, el panel lateral, el botón del tema y el esqueleto de la escena                                                                                                                                                                                                                          |
+| `src/lib`, `src/sw`           | el tema, la luz del día de la escena, los supuestos económicos (zod), la semana en el worker (TanStack Query), las cabeceras de seguridad y qué peticiones guarda el service worker                                                                                                                                                                               |
+| `e2e/` (Playwright, 18 tests) | recorrido guiado, escena 3D, icono, barra superior, escenarios de taquicardia ventricular, fibrilación auricular y órdenes falsas, paneles y páginas «Cómo funciona» (con la semana en el navegador) y «Economía» (con un valor exacto y uno fuera de rango), sin conexión, el tema, las cabeceras de seguridad, sin errores ni violaciones del CSP en la consola |
 
 Además: Dependabot (npm y GitHub Actions) y escaneo de secretos con protección al hacer _push_.
 
@@ -331,7 +347,8 @@ Usa los metadatos de [CITATION.cff](CITATION.cff) (_Cite this repository_ en Git
 ## Tecnologías y licencia
 
 Next.js 16 (App Router), React 19, TypeScript estricto, Tailwind CSS 4, three.js con React Three Fiber y drei, zustand,
-@noble/curves (ECDSA), Vitest y Testing Library, Playwright, ESLint y Prettier. Despliegue en Vercel, con Web Analytics
+TanStack Query, React Hook Form, Zod, Motion, @noble/curves (ECDSA), Vitest y Testing Library, Playwright, ESLint y
+Prettier. Despliegue en Vercel, con Web Analytics
 (visitas, sin cookies) y Speed Insights (Core Web Vitals de visitas reales) solo en el build que hace Vercel.
 El icono de la web es el icono _heart-pulse_ de [Lucide](https://lucide.dev) (licencia ISC).
 
