@@ -8,12 +8,14 @@ import { OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Color, Vector3, type DirectionalLight, type HemisphereLight } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { daylight, simHour } from "@/lib/daylight";
 import { useSimStore } from "@/lib/sim-store";
 import { SCENE_COLORS } from "@/lib/theme";
 import { useTheme } from "@/lib/use-theme";
 import { Dispenser, Scale, Station } from "./Devices";
 import { House } from "./House";
 import { Ambulance, CellTower, CloudPlatform, Ground, Hospital } from "./Infrastructure";
+import { Neighborhood } from "./Neighborhood";
 import { Links, Packets } from "./Network";
 import { Patient } from "./Patient";
 import { CAMERA_PRESETS } from "./positions";
@@ -34,6 +36,7 @@ export default function SimulationScene() {
       <DayNightLights />
       <Ground />
       <House />
+      <Neighborhood />
       <Station />
       <Dispenser />
       <Scale />
@@ -58,13 +61,11 @@ function DayNightLights() {
   useFrame(() => {
     const sim = useSimStore.getState().sim;
     if (!sim || !sun.current || !hemi.current) return;
-    const h = (((sim.now / 3600 + 6) % 24) + 24) % 24;
-    const elevation = Math.sin(((h - 6) / 12) * Math.PI); // > 0 de 6 a 18 h
-    const daylight = Math.max(0, elevation);
-    sun.current.intensity = 1.1 + 1.4 * daylight;
-    sun.current.color.copy(night.current).lerp(day.current, daylight);
-    sun.current.position.set(Math.cos(((h - 6) / 12) * Math.PI) * 60, 15 + 50 * daylight, 30);
-    hemi.current.intensity = 1.3 + 0.5 * daylight;
+    const light = daylight(sim.now);
+    sun.current.intensity = 1.1 + 1.4 * light;
+    sun.current.color.copy(night.current).lerp(day.current, light);
+    sun.current.position.set(Math.cos(((simHour(sim.now) - 6) / 12) * Math.PI) * 60, 15 + 50 * light, 30);
+    hemi.current.intensity = 1.3 + 0.5 * light;
   });
   return (
     <>

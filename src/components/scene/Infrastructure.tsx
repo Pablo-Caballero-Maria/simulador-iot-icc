@@ -8,6 +8,7 @@ import { useSimStore } from "@/lib/sim-store";
 import { AMBULANCE_ROUTE, CLOUD_POS, HOSPITAL_POS, TOWER_BASE, pointAlong } from "./positions";
 import { Selectable } from "./Selectable";
 import { SCENE_FONT } from "./font";
+import { Box, Car, Fence, RoadMarks, Windows } from "./Props";
 
 export function Ground() {
   return (
@@ -60,6 +61,16 @@ export function CellTower() {
           <sphereGeometry args={[0.35, 12, 12]} />
           <meshStandardMaterial ref={light} color="#111827" emissive="#fbbf24" />
         </mesh>
+        {/* Losa, caseta de equipos con su aire acondicionado, escalerilla de cables y valla */}
+        <Box p={[0, 0.05, 0]} s={[4.6, 0.1, 4.6]} c="#d6d3d1" shadow={false} />
+        <Box p={[1.4, 0.85, 1.2]} s={[1.4, 1.5, 1]} c="#e2e8f0" />
+        <Box p={[1.4, 1.2, 1.72]} s={[0.6, 0.4, 0.05]} c="#94a3b8" />
+        <Box p={[0.55, 0.55, 1.2]} s={[0.25, 0.25, 0.25]} c="#64748b" />
+        <Box p={[0.35, 10, 0.35]} s={[0.12, 19, 0.12]} c="#334155" />
+        <Fence from={[-2.3, 0, -2.3]} to={[2.3, 0, -2.3]} h={1.6} color="#94a3b8" />
+        <Fence from={[2.3, 0, -2.3]} to={[2.3, 0, 2.3]} h={1.6} color="#94a3b8" />
+        <Fence from={[2.3, 0, 2.3]} to={[-2.3, 0, 2.3]} h={1.6} color="#94a3b8" />
+        <Fence from={[-2.3, 0, 2.3]} to={[-2.3, 0, -2.3]} h={1.6} color="#94a3b8" />
         <Billboard position={[0, 23.4, 0]}>
           <Text
             font={SCENE_FONT}
@@ -122,6 +133,17 @@ export function CloudPlatform() {
   );
 }
 
+/** Ventanas de una fachada de `width` × 3 plantas, como lista de posiciones. */
+function facade(width: number, columns: number, at: (offset: number, y: number) => [number, number, number], rotY = 0) {
+  const windows: { p: [number, number, number]; rotY: number }[] = [];
+  for (const y of [1.6, 3.6, 5.6])
+    for (let i = 0; i < columns; i++) windows.push({ p: at(-width / 2 + (width * (i + 0.5)) / columns, y), rotY });
+  return windows;
+}
+
+/** Plazas del aparcamiento, al oeste del hospital. */
+const PARKING_LINES = [21.5, 23.8, 26.1, 28.4].map((z) => ({ p: [32.8, 0.013, z] as [number, number, number] }));
+
 export function Hospital() {
   const [x, , z] = HOSPITAL_POS;
   return (
@@ -131,22 +153,60 @@ export function Hospital() {
           <boxGeometry args={[10, 7, 7]} />
           <meshStandardMaterial color="#f8fafc" />
         </mesh>
-        {[1.6, 3.6, 5.6].map((y) => (
-          <mesh key={y} position={[0, y, 3.52]}>
-            <boxGeometry args={[8.6, 0.8, 0.05]} />
-            <meshStandardMaterial color="#93c5fd" emissive="#60a5fa" emissiveIntensity={0.15} />
+        {/* Franja de color por planta y ventanas en las cuatro fachadas */}
+        {[0.9, 2.9, 4.9].map((y) => (
+          <mesh key={y} position={[0, y, 0]}>
+            <boxGeometry args={[10.04, 0.12, 7.04]} />
+            <meshStandardMaterial color="#38bdf8" />
           </mesh>
         ))}
+        <Windows
+          windows={[
+            ...facade(10, 6, (o, y) => [o, y, 3.53]),
+            ...facade(10, 6, (o, y) => [o, y, -3.53]).filter(({ p }) => !(p[1] < 2 && Math.abs(p[0] - (40 - x)) < 1.6)),
+            ...facade(7, 4, (o, y) => [-5.03, y, o], Math.PI / 2),
+            ...facade(7, 4, (o, y) => [5.03, y, o], Math.PI / 2),
+          ]}
+          size={[1, 1]}
+        />
+        {/* Entrada de urgencias, hacia la calle: puertas de cristal y marquesina */}
+        <group position={[40 - x, 0, -3.5]}>
+          <Box p={[0, 1.15, -0.03]} s={[2.4, 2.3, 0.06]} c="#bfdbfe" emissive="#60a5fa" />
+          <Box p={[0, 2.75, -1.1]} s={[4.2, 0.15, 2.4]} c="#e2e8f0" />
+          {[-1.9, 1.9].map((dx) => (
+            <Box key={dx} p={[dx, 1.35, -2.1]} s={[0.12, 2.7, 0.12]} c="#94a3b8" />
+          ))}
+          <Text
+            font={SCENE_FONT}
+            position={[0, 3.25, -0.05]}
+            rotation-y={Math.PI}
+            fontSize={0.45}
+            color="#b91c1c"
+            anchorX="center"
+          >
+            URGENCIAS
+          </Text>
+        </group>
+        {/* Azotea: helipuerto con su H y máquinas de climatización */}
+        <mesh position={[-1.8, 7.06, 0]} receiveShadow>
+          <cylinderGeometry args={[2.1, 2.1, 0.1, 32]} />
+          <meshStandardMaterial color="#334155" />
+        </mesh>
+        <Box p={[-2.4, 7.12, 0]} s={[0.25, 0.02, 1.6]} c="#f8fafc" shadow={false} />
+        <Box p={[-1.2, 7.12, 0]} s={[0.25, 0.02, 1.6]} c="#f8fafc" shadow={false} />
+        <Box p={[-1.8, 7.12, 0]} s={[1.2, 0.02, 0.25]} c="#f8fafc" shadow={false} />
+        <Box p={[3.9, 7.4, -2.6]} s={[1.4, 0.8, 1.2]} c="#cbd5e1" />
+        <Box p={[3.9, 7.4, 2.6]} s={[1.4, 0.8, 1.2]} c="#cbd5e1" />
         {/* Cruz */}
-        <mesh position={[0, 7.7, 0]}>
+        <mesh position={[2.2, 7.7, 0]}>
           <boxGeometry args={[2.4, 0.7, 0.7]} />
           <meshStandardMaterial color="#ef4444" emissive="#ef4444" emissiveIntensity={0.6} />
         </mesh>
-        <mesh position={[0, 7.7, 0]}>
+        <mesh position={[2.2, 7.7, 0]}>
           <boxGeometry args={[0.7, 0.7, 2.4]} />
           <meshStandardMaterial color="#ef4444" emissive="#ef4444" emissiveIntensity={0.6} />
         </mesh>
-        <Billboard position={[0, 9.6, 0]}>
+        <Billboard position={[0, 10.4, 0]}>
           <Text
             font={SCENE_FONT}
             fontSize={1.2}
@@ -159,6 +219,14 @@ export function Hospital() {
           </Text>
         </Billboard>
       </group>
+      {/* Aparcamiento */}
+      <mesh rotation-x={-Math.PI / 2} position={[32.8, 0.006, 25]} receiveShadow>
+        <planeGeometry args={[5.5, 8]} />
+        <meshStandardMaterial color="#cfd6de" />
+      </mesh>
+      <RoadMarks marks={PARKING_LINES} size={[4.6, 0.1]} />
+      <Car p={[32.8, 0, 22.65]} rotY={Math.PI / 2} color="#0f766e" />
+      <Car p={[32.8, 0, 27.25]} rotY={-Math.PI / 2} color="#facc15" />
     </Selectable>
   );
 }
