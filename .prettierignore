@@ -8,3 +8,5 @@ src/data/resultados.json
 next-env.d.ts
 test-results
 playwright-report
+# Google Search Console's verification file: its content must stay exactly as Google gave it
+public/google*.html
