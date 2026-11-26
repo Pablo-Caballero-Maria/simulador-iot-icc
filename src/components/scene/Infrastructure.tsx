@@ -7,6 +7,7 @@ import type { Group, MeshStandardMaterial } from "three";
 import { useSimStore } from "@/lib/sim-store";
 import { AMBULANCE_ROUTE, CLOUD_POS, HOSPITAL_POS, TOWER_BASE, pointAlong } from "./positions";
 import { Selectable } from "./Selectable";
+import { SCENE_FONT } from "./font";
 
 export function Ground() {
   return (
@@ -60,7 +61,14 @@ export function CellTower() {
           <meshStandardMaterial ref={light} color="#111827" emissive="#fbbf24" />
         </mesh>
         <Billboard position={[0, 23.4, 0]}>
-          <Text fontSize={1.5} color="#92400e" anchorX="center" outlineWidth={0.06} outlineColor="#ffffff">
+          <Text
+            font={SCENE_FONT}
+            fontSize={1.5}
+            color="#92400e"
+            anchorX="center"
+            outlineWidth={0.06}
+            outlineColor="#ffffff"
+          >
             Red móvil LTE-M / NB-IoT
           </Text>
         </Billboard>
@@ -98,7 +106,14 @@ export function CloudPlatform() {
           </mesh>
         ))}
         <Billboard position={[0, 4.6, 0]}>
-          <Text fontSize={1.5} color="#1e3a8a" anchorX="center" outlineWidth={0.06} outlineColor="#ffffff">
+          <Text
+            font={SCENE_FONT}
+            fontSize={1.5}
+            color="#1e3a8a"
+            anchorX="center"
+            outlineWidth={0.06}
+            outlineColor="#ffffff"
+          >
             Plataforma en la nube (UE)
           </Text>
         </Billboard>
@@ -132,7 +147,14 @@ export function Hospital() {
           <meshStandardMaterial color="#ef4444" emissive="#ef4444" emissiveIntensity={0.6} />
         </mesh>
         <Billboard position={[0, 9.6, 0]}>
-          <Text fontSize={1.2} color="#1e3a8a" anchorX="center" outlineWidth={0.05} outlineColor="#ffffff">
+          <Text
+            font={SCENE_FONT}
+            fontSize={1.2}
+            color="#1e3a8a"
+            anchorX="center"
+            outlineWidth={0.05}
+            outlineColor="#ffffff"
+          >
             Hospital: Cardiología y HaD
           </Text>
         </Billboard>

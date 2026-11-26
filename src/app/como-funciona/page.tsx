@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ReproduceWeek } from "@/components/results/ReproduceWeek";
 import { PageShell } from "@/components/ui/PageShell";
 import { LevelBadge } from "@/components/ui/primitives";
 import results from "@/data/resultados.json";
@@ -187,6 +188,7 @@ export default function ComoFuncionaPage() {
           Generado con <code>npm run results</code> ({r.generatedAt}): diez semillas por escenario. Detalle en el
           apartado 7 de la memoria.
         </p>
+        <ReproduceWeek published={r.normalWeek} />
       </Section>
 
       <Section title="Límites del modelo">

@@ -15,6 +15,9 @@ import { StatsView } from "@/components/panels/StatsView";
 import { MessageLog } from "@/components/panels/MessageLog";
 import { ClinicalConsole } from "@/components/panels/ClinicalConsole";
 import { WatchList } from "./ScenarioPicker";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
+import { rise } from "@/lib/motion";
 
 interface PanelDef {
   id: PanelId;
@@ -168,7 +171,12 @@ export function ToolPanel() {
           <X aria-hidden className="h-4 w-4" />
         </button>
       </header>
-      <div className="scroll-thin min-h-0 flex-1 overflow-y-auto p-4">{def.render()}</div>
+      {/* Al cambiar de herramienta, su contenido entra con un fundido. */}
+      <AnimatePresence mode="wait" initial={false}>
+        <m.div key={def.id} {...rise} className="scroll-thin min-h-0 flex-1 overflow-y-auto p-4">
+          {def.render()}
+        </m.div>
+      </AnimatePresence>
     </aside>
   );
 }

@@ -2,6 +2,9 @@
 /** Recorrido guiado paso a paso, superpuesto a la escena. */
 import { useEffect } from "react";
 import { X } from "lucide-react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
+import { rise } from "@/lib/motion";
 import { TOUR } from "@/data/tour";
 import { useSimStore } from "@/lib/sim-store";
 import { Button, LevelBadge } from "@/components/ui/primitives";
@@ -38,8 +41,13 @@ export function Tour({ step, onStep, onClose }: { step: number; onStep: (n: numb
           <X aria-hidden className="h-4 w-4" />
         </button>
       </div>
-      <h2 className="mt-2 text-sm font-semibold text-slate-900">{current.title}</h2>
-      <p className="mt-1 text-xs leading-relaxed text-slate-600">{current.text}</p>
+      {/* Cada paso entra con un fundido; el primero no (la tarjeta ya entra con el suyo). */}
+      <AnimatePresence mode="wait" initial={false}>
+        <m.div key={step} {...rise}>
+          <h2 className="mt-2 text-sm font-semibold text-slate-900">{current.title}</h2>
+          <p className="mt-1 text-xs leading-relaxed text-slate-600">{current.text}</p>
+        </m.div>
+      </AnimatePresence>
       <div className="mt-3 flex items-center justify-between">
         <Button variant="ghost" disabled={step === 0} onClick={() => onStep(step - 1)}>
           ← Anterior

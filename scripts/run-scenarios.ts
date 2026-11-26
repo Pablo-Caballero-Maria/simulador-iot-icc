@@ -13,6 +13,7 @@ import { DAY, HOUR, MINUTE } from "../src/sim/core/time";
 import { mean, percentile } from "../src/sim/core/stats";
 import { sensitivity, breakEvenReduction, breakEvenRisk } from "../src/sim/economics";
 import { DEFAULT_PARAMS, mergeParams } from "../src/sim/params";
+import { runNormalWeek } from "../src/sim/experiments";
 import { createScenario } from "../src/sim/scenarios";
 import { Simulation } from "../src/sim/simulation";
 import { RhythmClassifier } from "../src/sim/wearable/classifier";
@@ -27,27 +28,7 @@ function log(msg: string) {
 
 // 1. Semana normal ----------------------------------------------------------
 {
-  const rows = SEEDS.slice(0, 5).map((seed) => {
-    const sim = new Simulation({ params: DEFAULT_PARAMS, seed });
-    sim.adaptFidelity(1e5);
-    sim.advance(7 * DAY);
-    const s = sim.snapshot();
-    const falseAlerts = sim.allAlerts.filter((a) => a.real === false && a.consoleAt !== undefined).length;
-    return {
-      blePerDay: s.data.blePerDay,
-      wanPerDay: s.data.wanPerDay,
-      payloadPerDay: s.data.wanPayloadPerDay,
-      autonomy: s.wearable.autonomyDays,
-      current: s.wearable.averageCurrent,
-      accuracy: s.classifier.accuracy,
-      windows: s.classifier.windows,
-      falseAlertsPerWeek: falseAlerts,
-      critical: s.alerts.critical,
-      bleCodedPct: (s.ble.timeIn.coded / (7 * DAY)) * 100,
-      bleDisconnectedPct: (s.ble.timeIn.disconnected / (7 * DAY)) * 100,
-      duplicates: s.metrics.duplicates,
-    };
-  });
+  const rows = SEEDS.slice(0, 5).map((seed) => runNormalWeek(seed));
   const avg = (k: keyof (typeof rows)[number]) => mean(rows.map((x) => x[k] as number));
   results.normalWeek = {
     blePerDayKB: r(avg("blePerDay") / 1000, 1),
@@ -58,7 +39,7 @@ function log(msg: string) {
     currentMa: r(avg("current"), 3),
     accuracyPct: r(avg("accuracy") * 100, 2),
     windowsPerWeek: avg("windows"),
-    falseAlertsPerWeek: avg("falseAlertsPerWeek"),
+    falseAlertsPerWeek: avg("falseAlerts"),
     criticalAlerts: avg("critical"),
     bleCodedPct: r(avg("bleCodedPct"), 1),
     bleDisconnectedPct: r(avg("bleDisconnectedPct"), 1),

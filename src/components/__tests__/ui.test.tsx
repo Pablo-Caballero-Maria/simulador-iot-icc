@@ -1,6 +1,11 @@
 // @vitest-environment jsdom
-import { act, fireEvent, render, screen, within } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { act, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import type { ReactNode } from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ReproduceWeek } from "@/components/results/ReproduceWeek";
+import { runNormalWeek } from "@/sim/experiments";
+import { fakeWorker } from "@/test/fake-worker";
 import { EconomicsCalculator } from "@/components/economics/EconomicsCalculator";
 import { ClinicalConsole } from "@/components/panels/ClinicalConsole";
 import { LevelBadge } from "@/components/ui/primitives";
@@ -28,12 +33,82 @@ describe("EconomicsCalculator", () => {
     ).toEqual(["Recuperación de la inversión", "no se recupera", "78 meses", "37 meses"]);
   });
 
-  it("recalcula al cambiar un supuesto", () => {
+  it("recalcula al mover un deslizador, y su campo lo refleja", () => {
     render(<EconomicsCalculator />);
-    const slider = screen.getByLabelText(/Hospitalizaciones por IC por paciente y año/);
+    const slider = screen.getByLabelText("Hospitalizaciones por IC por paciente y año (deslizador)");
     fireEvent.change(slider, { target: { value: "0.6" } });
     const row = screen.getByText("Recuperación de la inversión").closest("tr")!;
     expect(within(row).getAllByRole("cell")[2].textContent).toBe("14 meses");
+    expect(screen.getByRole("spinbutton", { name: "Hospitalizaciones por IC por paciente y año" })).toHaveValue(0.6);
+  });
+
+  it("acepta un valor exacto escrito, y explica el que no vale sin perder los resultados", async () => {
+    render(<EconomicsCalculator />);
+    const field = screen.getByRole("spinbutton", { name: "Precio del kit" });
+    const payback = () =>
+      within(screen.getByText("Recuperación de la inversión").closest("tr")!).getAllByRole("cell")[2].textContent;
+    const before = payback();
+
+    fireEvent.change(field, { target: { value: "50" } });
+    expect(await screen.findByText("Entre 300 y 1500.")).toBeInTheDocument();
+    expect(field).toHaveAttribute("aria-invalid", "true");
+    expect(payback()).toBe(before);
+
+    fireEvent.change(field, { target: { value: "455" } });
+    await waitFor(() => expect(screen.queryByText("Entre 300 y 1500.")).not.toBeInTheDocument());
+    expect(screen.getByText("455 €")).toBeInTheDocument();
+    expect(payback()).not.toBe(before);
+
+    fireEvent.click(screen.getByRole("button", { name: "Restablecer" }));
+    await waitFor(() => expect(field).toHaveValue(700));
+    expect(payback()).toBe(before);
+  });
+});
+
+describe("ReproduceWeek", () => {
+  const published = {
+    autonomyDays: 46.1,
+    wanPerDayKB: 53.1,
+    blePerDayKB: 17.2,
+    accuracyPct: 99.79,
+    falseAlertsPerWeek: 0,
+  };
+
+  function renderWithQuery(ui: ReactNode) {
+    return render(<QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>);
+  }
+
+  it("simula semanas con semillas nuevas junto a la media de la memoria", async () => {
+    const run = runNormalWeek(6, 1);
+    const createWorker = vi.fn(
+      () =>
+        fakeWorker((request: unknown) => ({
+          ok: true,
+          run: { ...run, seed: (request as { seed: number }).seed },
+        })) as unknown as Worker,
+    );
+    renderWithQuery(<ReproduceWeek published={published} createWorker={createWorker} />);
+    expect(screen.getByRole("row", { name: /Memoria/ })).toHaveTextContent("46,1 días");
+
+    fireEvent.click(screen.getByRole("button", { name: "Simular una semana" }));
+    const row = await screen.findByRole("row", { name: /Semilla 6/ });
+    await waitFor(() =>
+      expect(row).toHaveTextContent(
+        `${run.autonomy.toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 })} días`,
+      ),
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Simular otra semana" }));
+    expect(await screen.findByRole("row", { name: /Semilla 7/ })).toBeInTheDocument();
+    expect(createWorker).toHaveBeenCalledTimes(2);
+  });
+
+  it("dice si la simulación falla", async () => {
+    renderWithQuery(
+      <ReproduceWeek published={published} createWorker={() => fakeWorker(null, "sin memoria") as unknown as Worker} />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Simular una semana" }));
+    expect(await screen.findByText("No se pudo simular: sin memoria")).toBeInTheDocument();
   });
 });
 

@@ -2,6 +2,7 @@
 /** Domicilio del paciente: suelos, tabiques (con la geometría de la simulación), muebles y jardín. */
 import { Text } from "@react-three/drei";
 import { ROOMS, SPOTS, WALLS } from "@/sim/physiology/home";
+import { SCENE_FONT } from "./font";
 
 const WALL_HEIGHT = 2.4;
 /** Posición de los nombres de las estancias, donde no los tapan los muebles. */
@@ -44,6 +45,7 @@ export function House() {
             <meshStandardMaterial color={FLOOR_COLORS[r.id] ?? "#e5e7eb"} />
           </mesh>
           <Text
+            font={SCENE_FONT}
             position={LABEL_POS[r.id] ?? [(r.x0 + r.x1) / 2, 0.04, (r.z0 + r.z1) / 2]}
             rotation-x={-Math.PI / 2}
             fontSize={0.38}
